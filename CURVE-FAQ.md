@@ -17,7 +17,7 @@
 >  https://github.com/opencurve/curve/issues/4
 
 7. 怎么对接k8s?
-> 目前是类似ceph rbd-nbd的方式，我们有一个nbd，支持物理机map curve盘后使用
+> 目前是类似ceph rbd-nbd的方式，我们有一个nbd，支持物理机map curve盘后使用，k8s需要对接map这种方式
 
 8. 对海量小文件的支持怎么样？
 > 目前提供的是块存储
