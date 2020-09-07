@@ -25,7 +25,37 @@
 9. curve是否有对接缓存机制？（bcache或者client缓存）
 > 底层用的是ssd，暂时没有缓存机制
 
-10.关于文档
+10. 安装curve openssl版本要求如何？
+> 版本1.1.0以上
+
+11. 再次部署是否需要clean？
+> 需要，方法参考：https://github.com/opencurve/curve/blob/master/curve-ansible/README.md#41-%E6%B8%85%E7%90%86%E9%9B%86%E7%BE%A4
+
+12. 安装nbd和nebd报错：Failed to connect to the host via ssh: ssh: connect to host 192.168.160.110 port 1046 connection refused
+> 修改curve/curve-ansible/client.ini 中 ansible_ssh_port为ssh端口，默认22
+
+13. 由于创建文件大小小于10G而报错（create fail. ret = -24）
+> 创建文件大小最小10G
+
+14. 如果硬盘是5T的，只格式化1%（server.ini [chunkservers:vars] chunk_alloc_percent=1）, 那永远只有1%可用吗？还是可用的有5T，只是后面的写会慢一点？
+> 只有1%可用，但是可以扩容
+
+15. curve直接使用braft的文件日志，带来的数据双写问题对性能影响大吗？
+> 有一定影响，正在优化中
+
+16. 运行清理后，fstab里面的挂载没清除，如果盘用作别的可能导致系统重启后进入紧急模式
+> 正在改进
+
+17. 内核版本是必须要3.15以上吗？
+> 有配置项可以控制，可以在server.ini的[chunkservers:vars]里增加一个chunkserver_fs_enable_renameat2=false。或者手动把chunlserver机器上的/etc/curve/chunkserver.conf里面的变量改一下再重启（但是要用到nbd的话，内核版本要求比较高）
+
+18. 客户端内核>=4.18.0-193.el8.x86_64，是为了使客户端内核支持nbd吗？
+> 是的
+
+19. curve对于大IO的性能较差？
+> 大io的情况下 client的参数需要调整global.fileIOSplitMaxSizeKB=64 大io情况下切分粒度调大/sys/block/nbd0/queue/max_sectors_kb 配合上面的修改
+
+20. 关于文档
 主要的文档有：MDS(架构、调度、copyset replication、分配等)、client(架构、io路径、nebd等)、chunkserver(架构、multi-raft、cow等)、snapshotcloneserver(架构、任务管理和执行)
 
 ### 大家有问题欢迎给我们提issue
